@@ -42,9 +42,14 @@
       .controls .ui.header {
         margin-bottom: .3rem;
       }
+
       #widget {
         width: 640px;
-        height: 480px;
+        height: 640px;
+      }
+
+      #shelf-menu {
+        visibility: hidden;
       }
 
       input[type=range] {
@@ -63,72 +68,52 @@
             <div class="ui vertical menu">
                 <div class="header item"><h3>Table Dimensions</h3></div>
                 <div class='item'>
-
                     <h5 class='ui header'>Table Length</h5>
                     <div id='table-length-out' class='ui large blue pointing left label'>15</div>
                     <input id='table-length' type='range' min='36' max='72' step='1'/>
-
                 </div>
                 <div class='item'>
-
                     <h5 class='ui header'>Table Width</h5>
                     <div id='table-width-out' class='ui large blue pointing left label'>15</div>
                     <input id='table-width' type='range' min='12' max='36' step='1' />
-
                 </div>
                 <div class='item'>
-
-                    <h5 class='ui header'>Table Thickness</h5>
-                    <div id='table-thick-out' class='ui large blue pointing left label'>15</div>
-                    <input id='table-thick' type='range' min='1' max='2' step='.5' />
-
-                </div>  
-                <div class='item'>
-
                     <h5 class='ui header'>Table Height</h5>
                     <div id='table-height-out' class='ui large blue pointing left label'>15</div>
                     <input id='table-height' type='range' min='12' max='42' step='1'/>
-
-                </div>              
-            </div>
-<!--             <div class="ui equal width grid">
-              <div class='column'>
-                <div class='row'>
-                  <div class='ui segment'>
-                    <h5 class='ui header'>Table Length</h5>
-                    <div id='table-length-out' class='ui blue pointing right label'>15</div>
-                    <input id='table-length' type='range' min='36' max='72' step='1'/>
-                  </div>
                 </div>
-                <div class='row'>
-                  <div class='ui segment'>
-                    <h5 class='ui header'>Table Width</h5>
-                    <div id='table-width-out' class='ui blue pointing right label'>15</div>
-                    <input id='table-width' type='range' min='12' max='36' step='1' />
-                  </div>            
-                </div>
-                <div class='row'>
-                  <div class='ui segment'>
+                <div class='item'>
                     <h5 class='ui header'>Table Thickness</h5>
-                    <div id='table-thick-out' class='ui blue pointing right label'>15</div>
+                    <div id='table-thick-out' class='ui large blue pointing left label'>15</div>
                     <input id='table-thick' type='range' min='1' max='2' step='.5' />
+                </div>
+                <div class="item">
+                    <h5 class='ui header'>Add a shelf?</h5>
+                    <div class="ui checkbox">
+                      <input type="checkbox" name="shelf-on" id="shelf-on" onclick="toggleShelf(this)">
+                      <label>Yes, please!</label>
+                    </div>
                   </div>
-                </div>  
-                <div class='row'>
-                  <div class='ui segment'>
-                    <h5 class='ui header'>Table Height</h5>
-                    <div id='table-height-out' class='ui blue pointing right label'>15</div>
-                    <input id='table-height' type='range' min='12' max='42' step='1'/>
-                  </div>
-                </div>              
-              </div>          
-            </div> -->
+            </div>
+
+            <div class="ui vertical menu" id="shelf-menu">
+                <div class="header item"><h3>Shelving Options</h3></div>
+                <div class='item'>
+                    <h5 class='ui header'>Shelf Height</h5>
+                    <div id='shelf-height-out' class='ui large blue pointing left label'>15</div>
+                    <input id='shelf-height' type='range' min='3' max='18' step='1'/>
+                </div>
+                <div class='item'>
+                    <h5 class='ui header'>Shelf Thickness</h5>
+                    <div id='shelf-thick-out' class='ui large blue pointing left label'>15</div>
+                    <input id='shelf-thick' type='range' min='1' max='2' step='.5'/>
+                </div>                
+            </div>
           </div>
         </div>
         <div class="twelve wide column">
           <div id="widget"></div>
         </div>
-
       </div>
     </div>
     
@@ -158,6 +143,18 @@
         update();
       }
 
+      function toggleShelf(checkbox) {
+        if (checkbox.checked) {
+          scene.add(shelf);
+          document.getElementById('shelf-menu').style.visibility = "visible";
+
+        } else {
+          scene.remove(shelf);
+          document.getElementById('shelf-menu').style.visibility = "hidden";
+        }
+
+      }
+
       function update() {
         
         lengthScale = lengthInput.value / tableLength;
@@ -165,9 +162,16 @@
         heightScale = heightInput.value / tableHeight;
         thicknessScale = thicknessInput.value / topThickness;
 
+        shelfHeightScale = shelfHeightInput.value / shelfHeight;
+        shelfThicknessScale = shelfThicknessInput.value / shelfThickness;
+
         tableTop.scale.x = lengthScale;
         tableTop.scale.y = widthScale;
         tableTop.scale.z = thicknessScale;
+
+        shelf.scale.x = lengthScale;
+        shelf.scale.y = widthScale;
+        shelf.scale.z = shelfThicknessScale;
 
         for (var i = 0; i < legs.length; i++) {
           legs[i].scale.z = heightScale;
@@ -189,9 +193,14 @@
         legs[3].position.y = widthScale * tableWidth - legWidth/2 - legOffset;
         legs[3].position.z = heightScale * tableHeight/2; 
 
+        // The origin of a mesh is at its centroid
         tableTop.position.x = lengthScale * tableLength / 2;
         tableTop.position.y = widthScale * tableWidth / 2;
         tableTop.position.z = heightScale * tableHeight;
+
+        shelf.position.x = lengthScale * tableLength/2;
+        shelf.position.y = widthScale * tableWidth/2;
+        shelf.position.z = shelfHeightScale * shelfHeight;
 
       }
 
@@ -220,25 +229,30 @@
         tableLength     = 61,
         legWidth        = 2,
         topThickness    = 1.5,
-        legOffset       = 1;
+        legOffset       = 1,
+        shelfHeight     = 6,
+        shelfThickness  = 1;
 
       var lengthScale   = 1,
         widthScale      = 1,
         heightScale     = 1,
-        thicknessScale  = 1;
+        thicknessScale  = 1,
+        shelfHeightScale = 1,
+        shelfThicknessScale = 1;
 
       var lengthInput = document.getElementById('table-length'),
         widthInput = document.getElementById('table-width'),
         heightInput = document.getElementById('table-height'),
-        thicknessInput = document.getElementById('table-thick');
-        // updateButton = document.getElementById('update');
-
-      // // updateButton.onclick = update;
+        thicknessInput = document.getElementById('table-thick'),
+        shelfHeightInput = document.getElementById('shelf-height'),
+        shelfThicknessInput = document.getElementById('shelf-thick');
 
       lengthInput.value = tableLength;
       widthInput.value = tableWidth;
       heightInput.value = tableHeight;
       thicknessInput.value = topThickness;
+      shelfHeightInput.value = shelfHeight;
+      shelfThicknessInput.value = shelfThickness;
 
       var canvas = document.getElementById('widget');
 
@@ -253,18 +267,29 @@
       var renderer = new THREE.WebGLRenderer( {antialias: true} );
       renderer.setSize( WIDTH, HEIGHT );
       renderer.setClearColor(0xFFFFFF);
-      // document.body.appendChild( renderer.domElement );
       document.getElementById('widget').appendChild(renderer.domElement);
-
+      
+      // Create the table top mesh
       var topGeo = new THREE.BoxGeometry(tableLength, tableWidth, topThickness);
       var topMatl = new THREE.MeshLambertMaterial({
             map: THREE.ImageUtils.loadTexture('img/walnut01.jpg')
         });
       var tableTop = new THREE.Mesh(topGeo, topMatl);
 
+      // Create the shelf mesh
+      var shelfGeo = new THREE.BoxGeometry(tableLength - 4, tableWidth - 4, shelfThickness);
+      var shelfMatl = topMatl;
+      var shelf = new THREE.Mesh(shelfGeo, shelfMatl);
+
+      // Initial table top position
       tableTop.position.x = tableLength/2;
       tableTop.position.y = tableWidth/2;
       tableTop.position.z = tableHeight + topThickness/2;
+
+      // Initial shelf position
+      shelf.position.x = tableLength/2;
+      shelf.position.y = tableWidth/2;
+      shelf.position.z = shelfHeight + shelfThickness/2;
 
       var legGeo = new THREE.BoxGeometry(legWidth, legWidth, tableHeight);
       var legMatl = new THREE.MeshLambertMaterial({
