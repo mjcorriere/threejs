@@ -28,16 +28,23 @@
 
       input {
         width: 50px;
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
       .controls {
         padding: 10px;
       }
 
+      .controls .ui.vertical.menu {
+        width: 18rem;
+      }
+
+      .controls .ui.header {
+        margin-bottom: .3rem;
+      }
       #widget {
-        width: 1200px;
-        height: 960px;
+        width: 640px;
+        height: 480px;
       }
 
       input[type=range] {
@@ -49,51 +56,79 @@
     <script type="text/javascript" src="js/three.min.js"></script>
   </head>
   <body>
-    <div id="widget">
-      <div class='controls'>
+    <div class="ui grid">
+      <div class="row">
+        <div class="four wide column">
+          <div class='controls'>
+            <div class="ui vertical menu">
+                <div class="header item"><h3>Table Dimensions</h3></div>
+                <div class='item'>
 
-          <div class="ui equal width grid">
-            <div class='equal width row'>
-              <div class='column'>
-                <div class='ui segment'>
-                  <h5 class='ui header'>Table Length</h5>
-                  <div id='table-length-out' class='ui blue pointing right label'>15</div>
-                  <input id='table-length' type='range' min='36' max='72' step='1'/>
+                    <h5 class='ui header'>Table Length</h5>
+                    <div id='table-length-out' class='ui large blue pointing left label'>15</div>
+                    <input id='table-length' type='range' min='36' max='72' step='1'/>
+
                 </div>
-              </div>
-              <div class='column'>
-                <div class='ui segment'>
-                  <h5 class='ui header'>Table Width</h5>
-                  <div id='table-width-out' class='ui blue pointing right label'>15</div>
-                  <input id='table-width' type='range' min='12' max='36' step='1' />
-                </div>            
-              </div>
-              <div class='column'>
-                <div class='ui segment'>
-                  <h5 class='ui header'>Table Thickness</h5>
-                  <div id='table-thick-out' class='ui blue pointing right label'>15</div>
-                  <input id='table-thick' type='range' min='1' max='2' step='.5' />
+                <div class='item'>
+
+                    <h5 class='ui header'>Table Width</h5>
+                    <div id='table-width-out' class='ui large blue pointing left label'>15</div>
+                    <input id='table-width' type='range' min='12' max='36' step='1' />
+
                 </div>
-              </div>  
+                <div class='item'>
+
+                    <h5 class='ui header'>Table Thickness</h5>
+                    <div id='table-thick-out' class='ui large blue pointing left label'>15</div>
+                    <input id='table-thick' type='range' min='1' max='2' step='.5' />
+
+                </div>  
+                <div class='item'>
+
+                    <h5 class='ui header'>Table Height</h5>
+                    <div id='table-height-out' class='ui large blue pointing left label'>15</div>
+                    <input id='table-height' type='range' min='12' max='42' step='1'/>
+
+                </div>              
+            </div>
+<!--             <div class="ui equal width grid">
               <div class='column'>
-                <div class='ui segment'>
-                  <h5 class='ui header'>Table Height</h5>
-                  <div id='table-height-out' class='ui blue pointing right label'>15</div>
-                  <input id='table-height' type='range' min='12' max='42' step='1'/>
+                <div class='row'>
+                  <div class='ui segment'>
+                    <h5 class='ui header'>Table Length</h5>
+                    <div id='table-length-out' class='ui blue pointing right label'>15</div>
+                    <input id='table-length' type='range' min='36' max='72' step='1'/>
+                  </div>
                 </div>
-              </div>              
-            </div>          
+                <div class='row'>
+                  <div class='ui segment'>
+                    <h5 class='ui header'>Table Width</h5>
+                    <div id='table-width-out' class='ui blue pointing right label'>15</div>
+                    <input id='table-width' type='range' min='12' max='36' step='1' />
+                  </div>            
+                </div>
+                <div class='row'>
+                  <div class='ui segment'>
+                    <h5 class='ui header'>Table Thickness</h5>
+                    <div id='table-thick-out' class='ui blue pointing right label'>15</div>
+                    <input id='table-thick' type='range' min='1' max='2' step='.5' />
+                  </div>
+                </div>  
+                <div class='row'>
+                  <div class='ui segment'>
+                    <h5 class='ui header'>Table Height</h5>
+                    <div id='table-height-out' class='ui blue pointing right label'>15</div>
+                    <input id='table-height' type='range' min='12' max='42' step='1'/>
+                  </div>
+                </div>              
+              </div>          
+            </div> -->
           </div>
+        </div>
+        <div class="twelve wide column">
+          <div id="widget"></div>
+        </div>
 
-  <!--       <label for='table-length'>Length</label>
-        <input type='text' id='table-length'>
-        <label for='table-width'>Width</label>
-        <input type='text' id='table-width'>
-        <label for='table-height'>Height</label>
-        <input type='text' id='table-height'>
-        <label for='table-thickness'>Thickness</label>
-        <input type='text' id='table-thickness'>
-        <button id='update'>Update</button> -->
       </div>
     </div>
     
@@ -102,6 +137,7 @@
       window.addEventListener('load', initForm, false);
 
       function initForm() {
+        
         var sliders = document.querySelectorAll('input[type=range]');
         for (var i = 0; i < sliders.length; i++) {
           var slider = sliders[i];
@@ -112,6 +148,7 @@
           document.querySelector(outTarget).innerHTML = slider.value;
 
         }
+
       }
 
       function updateSlider(event) {
@@ -179,16 +216,16 @@
       };
 
       var tableWidth    = 30,
-        tableHeight   = 26,
-        tableLength   = 61,
-        legWidth    = 2,
-        topThickness  = 1.5,
-        legOffset     = 1;
+        tableHeight     = 26,
+        tableLength     = 61,
+        legWidth        = 2,
+        topThickness    = 1.5,
+        legOffset       = 1;
 
-      var lengthScale = 1,
-        widthScale = 1,
-        heightScale = 1,
-        thicknessScale = 1;
+      var lengthScale   = 1,
+        widthScale      = 1,
+        heightScale     = 1,
+        thicknessScale  = 1;
 
       var lengthInput = document.getElementById('table-length'),
         widthInput = document.getElementById('table-width'),
@@ -206,7 +243,7 @@
       var canvas = document.getElementById('widget');
 
       var WIDTH = canvas.offsetWidth;
-      var HEIGHT = 750;
+      var HEIGHT = canvas.offsetHeight;
 
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(60, WIDTH / HEIGHT, 0.1, 1000);
