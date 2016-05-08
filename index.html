@@ -178,29 +178,24 @@
           legs[i].scale.z = heightScale;
         }
 
-        legs[0].position.x = legWidth/2 + legOffset;
-        legs[0].position.y = legWidth/2 + legOffset;
+        legs[0].position.x = + ((lengthScale * tableLength)/2 - (legWidth/2 + legOffset));
+        legs[1].position.x = + ((lengthScale * tableLength)/2 - (legWidth/2 + legOffset));
+        legs[2].position.x = - ((lengthScale * tableLength)/2 - (legWidth/2 + legOffset));
+        legs[3].position.x = - ((lengthScale * tableLength)/2 - (legWidth/2 + legOffset));
+
+
+        legs[0].position.y = + ((widthScale * tableWidth)/2 - (legWidth/2 + legOffset));
+        legs[1].position.y = - ((widthScale * tableWidth)/2 - (legWidth/2 + legOffset));
+        legs[2].position.y = + ((widthScale * tableWidth)/2 - (legWidth/2 + legOffset));
+        legs[3].position.y = - ((widthScale * tableWidth)/2 - (legWidth/2 + legOffset));
+
         legs[0].position.z = heightScale * tableHeight/2;
-
-        legs[1].position.x = lengthScale * tableLength - legWidth/2 - legOffset;
-        legs[1].position.y = legWidth/2 + legOffset;
         legs[1].position.z = heightScale * tableHeight/2;
-
-        legs[2].position.x = legWidth/2 + legOffset;
-        legs[2].position.y = widthScale * tableWidth - legWidth/2 - legOffset;
         legs[2].position.z = heightScale * tableHeight/2;
-
-        legs[3].position.x = lengthScale * tableLength - legWidth/2 - legOffset;
-        legs[3].position.y = widthScale * tableWidth - legWidth/2 - legOffset;
         legs[3].position.z = heightScale * tableHeight/2; 
 
         // The origin of a mesh is at its centroid
-        tableTop.position.x = lengthScale * tableLength / 2;
-        tableTop.position.y = widthScale * tableWidth / 2;
         tableTop.position.z = heightScale * tableHeight;
-
-        shelf.position.x = lengthScale * tableLength/2;
-        shelf.position.y = widthScale * tableWidth/2;
         shelf.position.z = shelfHeightScale * shelfHeight;
 
       }
@@ -282,14 +277,14 @@
       var shelfMatl = topMatl;
       var shelf = new THREE.Mesh(shelfGeo, shelfMatl);
 
-      // Initial table top position
-      tableTop.position.x = tableLength/2;
-      tableTop.position.y = tableWidth/2;
+      // Initial table top position at origin.
+      tableTop.position.x = 0;
+      tableTop.position.y = 0;
       tableTop.position.z = tableHeight + topThickness/2;
 
       // Initial shelf position
-      shelf.position.x = tableLength/2;
-      shelf.position.y = tableWidth/2;
+      shelf.position.x = 0;
+      shelf.position.y = 0;
       shelf.position.z = shelfHeight + shelfThickness/2;
 
       var legGeo = new THREE.BoxGeometry(legWidth, legWidth, tableHeight);
