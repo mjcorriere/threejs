@@ -272,7 +272,7 @@
       // Create the table top mesh
       var topGeo = new THREE.BoxGeometry(tableLength, tableWidth, topThickness);
       var topMatl = new THREE.MeshLambertMaterial({
-            map: THREE.ImageUtils.loadTexture('img/walnut01.jpg')
+            map: THREE.ImageUtils.loadTexture('img/ikea_hammarp.png')
         });
       var tableTop = new THREE.Mesh(topGeo, topMatl);
 
@@ -310,7 +310,7 @@
       scene.add(ambientLight);
 
       var light;
-      light = new THREE.DirectionalLight( 0xdfebff, 1.75 );
+      light = new THREE.DirectionalLight( 0xdfebff, 1.0 );
       light.position.set( 50, 200, 100 );
       light.position.multiplyScalar( 1.3 );
 
